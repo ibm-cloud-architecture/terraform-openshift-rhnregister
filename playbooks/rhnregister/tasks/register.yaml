@@ -1,4 +1,10 @@
-# because redhat_subscription doesn't allow us to set this
+# in some cases where the node comes up already registered to an existing satellite, make sure
+# we clear the subscription information before we modify the rhsm configuration
+- name: Unregister RHN
+  redhat_subscription:
+    state: absent
+
+# because redhat_subscription ansible module doesn't allow us to set this
 - name: RHSM set config server.prefix
   shell: subscription-manager config --server.prefix={{ rhn_server_prefix }}
 
