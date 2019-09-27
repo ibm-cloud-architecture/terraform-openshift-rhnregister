@@ -11,7 +11,7 @@
 - name: RHSM set config server.port
   shell: subscription-manager config --server.port={{ rhn_server_port }}
 
-- name: Register RHN
+- name: Register RHN (Ansible >= 2.7)
   redhat_subscription:
     state: present
     username: "{{ rhn_username }}"
@@ -23,3 +23,15 @@
     rhsm_baseurl: "{{ rhn_rhsm_baseurl }}"
 
     force_register: yes
+  when: ansible_version.minor >= "7"
+
+- name: Register RHN (Ansible < 2.7)
+  redhat_subscription:
+    state: present
+    username: "{{ rhn_username }}"
+    password: "{{ rhn_password }}"
+    pool_ids: "{{ rhn_poolid }}"
+    server_hostname: "{{ rhn_server_hostname }}"
+    rhsm_baseurl: "{{ rhn_rhsm_baseurl }}"
+    force_register: yes
+  when: ansible_version.minor < "7"
